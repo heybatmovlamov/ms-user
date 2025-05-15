@@ -1,0 +1,20 @@
+spring:
+  application:
+    name: ms-user
+  datasource:
+    url: jdbc:postgresql://localhost:5432/ms_user
+    username: postgres
+    password: postgres
+    hikari:
+      maximum-pool-size: 5
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    open-in-view: false
+
+application:
+  client:
+    ms-auth:
+      url: http://localhost:8081
+
