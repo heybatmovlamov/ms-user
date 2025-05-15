@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RequiredArgsConstructor
-@RestController("/v1/user")
+@RestController("/v1/users")
 public class UserController {
 
     private final UserService userService;
