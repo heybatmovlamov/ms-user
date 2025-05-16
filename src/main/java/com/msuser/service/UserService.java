@@ -1,15 +1,16 @@
 package com.msuser.service;
 
-import com.msuser.client.AuthClient;
 import com.msuser.dao.entity.UserEntity;
 import com.msuser.dao.repository.UserRepository;
 import com.msuser.exception.AlreadyExistException;
+import com.msuser.exception.DataNotFoundException;
 import com.msuser.mapper.UserMapper;
 import com.msuser.model.enums.UserStatus;
 import com.msuser.model.request.UserRequest;
 import com.msuser.model.response.UserView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,17 +19,19 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final AuthClient authClient;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
+    private final PasswordEncoder passwordEncoder;
 
     @Transactional
     public UserView create(final UserRequest userRequest) {
         //todo mail sender send otp and confirm account
+
+        final String rawPassword = userRequest.getPassword();
+
         validateUsernameUniqueness(userRequest.getUsername());
 
-        final String encodedPassword = encodePassword(userRequest.getPassword());
-        userRequest.setPassword(encodedPassword);
+        userRequest.setPassword(encodePassword(rawPassword));
 
         UserEntity savedUser = saveUser(userRequest);
         log.info("UserEntity created: {}", savedUser);
@@ -44,12 +47,19 @@ public class UserService {
     }
 
     private String encodePassword(String rawPassword) {
-        return authClient.createPassword(rawPassword);
+        return passwordEncoder.encode(rawPassword);
     }
 
     private UserEntity saveUser(UserRequest request) {
         UserEntity entity = userMapper.toEntity(request);
+        log.info("UserEntity saved: {}", entity);
         return userRepository.save(entity);
     }
 
+    public UserView findUserByName(String email) {
+        log.info("UserEntity found by email: {}", email);
+        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+                .map(userMapper::toView)
+                .orElseThrow(() -> DataNotFoundException.of(email + " not found"));
+    }
 }
