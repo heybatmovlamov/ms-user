@@ -3,6 +3,7 @@ package com.msuser.service;
 import com.msuser.dao.entity.UserEntity;
 import com.msuser.dao.repository.UserRepository;
 import com.msuser.exception.AlreadyExistException;
+import com.msuser.exception.DataNotFoundException;
 import com.msuser.mapper.UserMapper;
 import com.msuser.model.enums.UserStatus;
 import com.msuser.model.request.UserRequest;
@@ -51,7 +52,14 @@ public class UserService {
 
     private UserEntity saveUser(UserRequest request) {
         UserEntity entity = userMapper.toEntity(request);
+        log.info("UserEntity saved: {}", entity);
         return userRepository.save(entity);
     }
 
+    public UserView findUserByName(String email) {
+        log.info("UserEntity found by email: {}", email);
+        return userRepository.findByEmailAndStatus(email, UserStatus.ACTIVE)
+                .map(userMapper::toView)
+                .orElseThrow(() -> DataNotFoundException.of(email + " not found"));
+    }
 }
