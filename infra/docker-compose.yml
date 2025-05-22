@@ -1,6 +1,6 @@
 services:
   db_company_assets:
-    container_name: company_assets
+    container_name: ms_user
     image: postgres
     ports:
       - "5432:5432"

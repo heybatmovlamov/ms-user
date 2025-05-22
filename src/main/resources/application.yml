@@ -16,6 +16,6 @@ spring:
 application:
   client:
     ms-auth:
-      url: http://localhost:8082
+      url: http://localhost:8081
 server:
-  port: 8083
+  port: 8080
