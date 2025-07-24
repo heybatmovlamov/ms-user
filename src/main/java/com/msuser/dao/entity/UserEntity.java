@@ -41,6 +41,10 @@ public class UserEntity {
     @Column(name = "role", nullable = false)
     private UserRole role;
 
+    @NotBlank
+    @Column(name = "number", nullable = false)
+    private String number;
+
     @NotNull
     @Column(name = "status", nullable = false)
     private UserStatus status;

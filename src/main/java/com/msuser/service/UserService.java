@@ -10,6 +10,7 @@ import com.msuser.model.request.UserRequest;
 import com.msuser.model.response.UserView;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,6 +40,11 @@ public class UserService {
         return userMapper.toView(savedUser);
     }
 
+    public ResponseEntity<String> validateCreate(final UserRequest request) {
+        return null;
+
+    }
+
     private void validateUsernameUniqueness(String username) {
         boolean exists = userRepository.existsByUsernameAndStatus(username, UserStatus.ACTIVE);
         if (exists) {
@@ -52,7 +58,6 @@ public class UserService {
 
     private UserEntity saveUser(UserRequest request) {
         UserEntity entity = userMapper.toEntity(request);
-        log.info("UserEntity saved: {}", entity);
         return userRepository.save(entity);
     }
 

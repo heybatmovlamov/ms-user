@@ -16,6 +16,7 @@ public class UserView {
     private Long id;
     private String username;
     private String email;
+    private String number;
     private UserRole role;
     private UserStatus status;
     private String password;

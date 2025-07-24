@@ -1,5 +1,5 @@
 services:
-  db_company_assets:
+  ms_user:
     container_name: ms_user
     image: postgres
     ports:
